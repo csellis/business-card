@@ -1,44 +1,66 @@
 #!/usr/bin/env node
 
-const chalk = require("chalk")
-const corners = require("./corners")
-const me = require("../data/me.json")
-const dividers = require("./dividers")
-const style = require("../data/style.json")
+import chalk from "chalk"
+import { readFileSync } from "node:fs"
+import { dirname, join } from "node:path"
+import { fileURLToPath } from "node:url"
+import corners from "./corners.js"
+import dividers from "./dividers.js"
+
+const root = join(dirname(fileURLToPath(import.meta.url)), "..")
+const me = JSON.parse(readFileSync(join(root, "data/me.json"), "utf8"))
+const style = JSON.parse(readFileSync(join(root, "data/style.json"), "utf8"))
 
 const base = chalk[style.base]
 const accent = chalk[style.accent]
 
-const spaces = count => " ".repeat(count)
-const name = (name, handle) => `${accent(name)} / ${accent(handle)}`
-const title = (title, company) => `${title} @ ${company}`
-const link = (name, url) => `${base(name)}: ${accent(url)}`
-const command = handle => accent(`npx ${handle}`)
-
 const width = 61
+const leftPad = 4
+const spaces = n => " ".repeat(Math.max(0, n))
+
+const row = (plain, colored, indent = leftPad) =>
+    border + spaces(indent) + colored + spaces(width - indent - plain.length) + border
+
+const rightRow = (plain, colored, rightMargin = 2) =>
+    border + spaces(width - rightMargin - plain.length) + colored + spaces(rightMargin) + border
+
+const link = (label, url) => ({
+    plain: `${label}: ${url}`,
+    colored: `${base(label)}: ${accent(url)}`,
+})
+
 const divider = dividers[style.divider]
 const { topLeft, topRight, bottomLeft, bottomRight } = corners[style.corners]
 
+const border = base("│")
 const topBorder = base(topLeft + "─".repeat(width) + topRight)
 const bottomBorder = base(bottomLeft + "─".repeat(width) + bottomRight)
 const dividerLine = base("├" + divider.repeat(width) + "┤")
-const border = base("│")
-const blankLine = base(border + spaces(width) + border)
+const blankLine = border + spaces(width) + border
+
+const name = { plain: `${me.name} / ${me.handle}`, colored: `${accent(me.name)} / ${accent(me.handle)}` }
+const title = { plain: `${me.title} @ ${me.company}`, colored: `${me.title} @ ${me.company}` }
+const website = link("Website", me.website)
+const github = link("GitHub", me.github)
+const linkedin = link("LinkedIn", me.linkedin)
+const twitter = link("Twitter", me.twitter)
+const substack = link("Substack", me.substack)
+const cmd = { plain: `npx ${me.handle}`, colored: accent(`npx ${me.handle}`) }
 
 const card = `
     ${topBorder}
     ${blankLine}
-    ${border + spaces(4) + name(me.name, me.handle) + spaces(30) + border}
-    ${border + spaces(4) + title(me.title, me.company) + spaces(26) + border}
+    ${row(name.plain, name.colored)}
+    ${row(title.plain, title.colored)}
     ${blankLine}
-    ${border + spaces(9) + link("Website", me.website) + spaces(21) + border}
-    ${border + spaces(10) + link("Twitch", me.twitch) + spaces(12) + border}
-    ${border + spaces(10) + link("GitHub", me.github) + spaces(17) + border}
-    ${border + spaces(9) + link("Twitter", me.twitter) + spaces(11) + border}
-    ${border + spaces(8) + link("LinkedIn", me.linkedin) + spaces(4) + border}
+    ${row(website.plain, website.colored)}
+    ${row(github.plain, github.colored)}
+    ${row(linkedin.plain, linkedin.colored)}
+    ${row(twitter.plain, twitter.colored)}
+    ${row(substack.plain, substack.colored)}
     ${blankLine}
     ${dividerLine}
-    ${border + spaces(42) + command(me.handle) + spaces(2) + border}
+    ${rightRow(cmd.plain, cmd.colored)}
     ${bottomBorder}
 `
 

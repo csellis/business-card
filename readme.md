@@ -1,21 +1,20 @@
-# 🃏 business card
+# business card
 
 _Digital business card._
 
+### Installation
 
-### 📦 Installation
+Installation is not required, as you can run this package with [`npx`][npx].
 
-Installation is not required!, as you can run this package with [`npx`][npx].
-
-### 🥑 Usage
+### Usage
 
 ```
 npx chrisellis
 ```
 
-### 🎞 Credit
+### Credit
 
-Inspired by [Brad Garropy][bg] who was inspired by [J.C. Hiatt][jc].  
+Inspired by [Brad Garropy][bg] who was inspired by [J.C. Hiatt][jc].
 Accomplished with the help of this [article][article].
 
 [bg]: https://bradgarropy.com/

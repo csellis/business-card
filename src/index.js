@@ -38,7 +38,7 @@ const bottomBorder = base(bottomLeft + "─".repeat(width) + bottomRight)
 const dividerLine = base("├" + divider.repeat(width) + "┤")
 const blankLine = border + spaces(width) + border
 
-const name = { plain: `${me.name} / ${me.handle}`, colored: `${accent(me.name)} / ${accent(me.handle)}` }
+const name = { plain: `${me.name} 🃏 ${me.handle}`, colored: `${accent(me.name)} 🃏 ${accent(me.handle)}` }
 const title = { plain: `${me.title} @ ${me.company}`, colored: `${me.title} @ ${me.company}` }
 const website = link("Website", me.website)
 const github = link("GitHub", me.github)
